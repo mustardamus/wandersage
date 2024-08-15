@@ -2,6 +2,9 @@
 
 A interactive notebook for the terminal, powered by Bash, [Zellij](https://zellij.dev) and [Gum](https://github.com/charmbracelet/gum).
 
+[demo.webm](https://github.com/user-attachments/assets/0dd20673-5fdb-4f97-8b13-515f12bfafd5)
+
+
 ## Getting started
 
 The fastest way to try out Wandersage, is by cloning the repo and just run it. This downloads the dependencies Zellij and Gum, and loads the interactive [documentation](./docs/):
