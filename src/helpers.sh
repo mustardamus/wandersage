@@ -6,10 +6,9 @@ function is_script_sourced {
 function trim(){
 	local str="$1"
 
-	str="$(printf "$str" | sed -z 's/^[[:space:]]*//')"
-	str="$(printf "$str" | sed -z 's/[[:space:]]*$//')"
-
-	echo "$str"
+  # lifted from https://github.com/jmooring/bash-function-library/blob/master/_trim.sh
+  trimmed="$(printf "%b" "${str}" | sed -E 's/^[[:space:]]+// ; s/[[:space:]]+$// ; /./,$ !d')"
+  printf "%s" "${trimmed}"
 }
 
 function get_command_label() {
