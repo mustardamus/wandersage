@@ -1,0 +1,40 @@
+layout {
+  tab split_direction="vertical" hide_floating_panes=true {
+    pane {
+      command "bash"
+      args "-c" "bash $SRC_PATH/zellij/loader.sh"
+      // loading it this way so we have access to envs
+    }
+
+    pane {
+      name "Terminal"
+      command "bash"
+    }
+
+    floating_panes {
+      pane {
+        name "Scratchpad"
+        x "5%"
+        y "5%"
+        width "90%"
+        height "90%"
+      }
+    }
+  }
+}
+
+keybinds clear-defaults=true {
+  normal {
+    bind "Alt Left" { MoveFocusOrTab "Left"; }
+    bind "Alt Right" { MoveFocusOrTab "Right"; }
+    bind "Alt Up" { ScrollUp; }
+    bind "Alt Down" { ScrollDown; }
+    bind "Alt s" { ToggleFloatingPanes; }
+    bind "Ctrl q" { Quit; }
+  }
+}
+
+on_force_close "quit"
+theme "dracula" // https://github.com/zellij-org/zellij/tree/main/zellij-utils/assets/themes
+mouse_mode false
+copy_on_select true

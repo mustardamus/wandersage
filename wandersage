@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
+export ROOT_PATH="$(realpath $(dirname $BASH_SOURCE))"
+export BIN_PATH="$ROOT_PATH/bin"
+export SRC_PATH="$ROOT_PATH/src"
+export ZEL="$BIN_PATH/zellij" # $ZELLIJ is taking over by Zellij
+export GUM="$BIN_PATH/gum"
+export NOTEBOOK="$1"
+
+for script in $SRC_PATH/*.sh; do
+  source $script
+done
+
+if [ "$1" = "--help" ]; then
+  print_help
+  exit
+fi
+
+bootstrap "$ROOT_PATH/bin"
+
+if ! is_script_sourced; then
+  while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        # -t|--theme) export OPT_THEME="$2"; shift ;;
+      --no-confirm) export OPT_NO_CONFIRM="true" ;;
+      --no-warn) export OPT_NO_WARN="true" ;;
+      -*) print_error_argument "$1"; exit 1 ;;
+      *) export NOTEBOOK="$1" ;;
+    esac
+
+    shift
+  done
+
+  if [ "${NOTEBOOK:0:1}" = "-" ]; then
+    export NOTEBOOK="" # show docs if no notebook is passed
+  fi
+
+  $ZEL --layout "$SRC_PATH/zellij/layout.kdl"
+  tput cuu 1
+fi
