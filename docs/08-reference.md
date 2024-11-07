@@ -2,6 +2,8 @@
 
 ## Variables
 
+Variables are available both, in the notebook renderer and the interactive terminal.
+
 ### `$GUM`
 
 The full path of the downloaded [Gum](https://github.com/charmbracelet/gum) binary.
@@ -14,11 +16,13 @@ You could use it, for example, to send [actions](https://zellij.dev/documentatio
 
 ### `$NOTEBOOK`
 
-The full path of the currently loaded notebook.
+Notebook renderer: The full path of the currently loaded notebook.
+Interactive terminal: The full path of the initially loaded notebook. This will not change when loading a new notebook!
 
 ### `$NOTEBOOKS`
 
-The full path of the parent directory of the currently loaded notebook.
+Notebook renderer: The full path of the parent directory of the currently loaded notebook.
+Interactive terminal: The full path of the parent directory of the initially loaded notebook. This will not change when loading a new notebook!
 
 ## Functions
 

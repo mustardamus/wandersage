@@ -43,6 +43,12 @@ echo "Current working directory: $(pwd)"
 echo "Loaded notebook path: $NOTEBOOK"
 ```
 
+Variables are also available in the terminal, but only the initial values.
+
+```shell:terminal
+echo "$NOTEBOOKS"
+```
+
 See the documentation notebook [Reference](./08-reference.md) for a full list of functions and variables you have access to.
 
 ## Example accessing functions and variables
