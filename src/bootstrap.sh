@@ -1,53 +1,81 @@
 function download_extract_copy() {
-  local url="$1"
-  local glob="$2"
-  local dest="$3"
-  local archive="$(mktemp -d)/$(basename $url)"
-  local tmp="$(mktemp -d)"
+	local url="$1"
+	local glob="$2"
+	local dest="$3"
+	local archive="$(mktemp -d)/$(basename $url)"
+	local tmp="$(mktemp -d)"
 
-  curl -sSLo "$archive" "$url"
-  tar -C "$tmp" -zxf "$archive"
-  mkdir -p "$dest"
-  cp "$(find $tmp/$glob)" "$dest/"
-  rm "$archive"
-  rm -rf "$tmp"
+	curl -sSLo "$archive" "$url"
+	tar -C "$tmp" -zxf "$archive"
+	mkdir -p "$dest"
+	cp "$(find $tmp/$glob)" "$dest/"
+	rm "$archive"
+	rm -rf "$tmp"
 }
 
-function download_confirm() {
-  local dep="$1"
-  local size="$2"
+function to_lowercase() {
+	local str="$1"
+	echo "$str" | tr '[:upper:]' '[:lower:]'
+}
 
-  read -r -p "Need to download dependency '$dep' ($size). Continue? [Y/n]" response
-  response=${response,,} # lowercase
+function ensure_dependency() {
+	local command="$1"
 
-  if [[ $response =~ ^(y| ) ]] || [[ -z $response ]]; then
-    echo "true"
-  fi
+	if [ ! -x "$(command -v "$command")" ]; then
+		echo "Need '$command' to bootstrap. Please install it."
+		exit 1
+	fi
+}
+
+function bootstrap_binary() {
+	local command="$1"
+	local version="$2"
+	local size="$3"
+	local repo="$4"
+	local archive_linux="$5"
+	local archive_darwin="$6"
+	local extract="$7"
+	local archive=""
+	local os="$(to_lowercase "$(uname -s)")"
+
+	if [ "$os" = "linux" ]; then
+		archive="$archive_linux"
+	elif [ "$os" = "darwin" ]; then
+		archive="$archive_darwin"
+	else
+		echo "Could not bootstrap '$command' for '$os'. Please install it yourself."
+		return
+	fi
+
+	local url="https://github.com/$repo/releases/download/v$version/$archive"
+
+	read -r -n 1 -p "Need to download dependency https://github.com/$repo ($version $size). Continue? [Y/n]: " response
+	response="$(to_lowercase $response)"
+
+	if [[ $response =~ ^(y| ) ]] || [[ -z $response ]]; then
+		echo "Downloading '$archive'..."
+		download_extract_copy "$url" "$extract" "$BIN_PATH"
+	fi
 }
 
 function bootstrap() {
-  local zellij_version="0.40.1"
-  local gum_version="0.14.1"
-  local zellij_url="https://github.com/zellij-org/zellij/releases/download/v$zellij_version/zellij-x86_64-unknown-linux-musl.tar.gz"
-  local gum_url="https://github.com/charmbracelet/gum/releases/download/v$gum_version/gum_$(echo $gum_version)_Linux_x86_64.tar.gz"
+	local arch="$(to_lowercase "$(uname -m)")"
 
-  if [ ! -x "$(command -v "curl")" ]; then
-    echo "Need 'curl' to bootstrap. Please install it."
-    exit 1
-  fi
+	ensure_dependency "curl"
+	ensure_dependency "tar"
 
-  if [ ! -x "$(command -v "tar")" ]; then
-    echo "Need 'tar' to bootstrap. Please install it."
-    exit 1
-  fi
+	if [ ! -x "$(command -v "zellij")" ] && [ ! -f "$ZEL" ]; then
+		local zellij_linux="zellij-$arch-unknown-linux-musl.tar.gz"
+		local zellij_darwin="zellij-$arch-apple-darwin.tar.gz"
 
-  if [ ! -f "$ZEL" ] && [ "$(download_confirm "Zellij" "~11MB")" = "true" ]; then
-    echo "Downloading 'Zellij' ($zellij_version)..."
-    download_extract_copy "$zellij_url" "zellij" "$BIN_PATH"
-  fi
+		bootstrap_binary "zellij" "0.41.1" "~11MB" "zellij-org/zellij" "$zellij_linux" "$zellij_darwin" "zellij"
+	fi
 
-  if [ ! -f "$GUM" ] && [ "$(download_confirm "Gum" "~4MB")" = "true" ]; then
-    echo "Downloading 'Gum' ($gum_version)..."
-    download_extract_copy "$gum_url" "**/gum" "$BIN_PATH"
-  fi
+	if [ ! -x "$(command -v "gum")" ] && [ ! -f "$GUM" ]; then
+		local gum_version="0.14.5"
+		local gum_linux="gum_$(echo $gum_version)_Linux_$(echo $arch).tar.gz"
+		local gum_darwin="gum_$(echo $gum_version)_Darwin_$(echo $arch).tar.gz"
+
+		bootstrap_binary "gum" "$gum_version" "~4MB" "charmbracelet/gum" "$gum_linux" "$gum_darwin" "**/gum"
+	fi
 }

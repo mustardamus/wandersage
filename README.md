@@ -4,7 +4,6 @@ A interactive notebook for the terminal, powered by Bash, [Zellij](https://zelli
 
 [demo.webm](https://github.com/user-attachments/assets/0dd20673-5fdb-4f97-8b13-515f12bfafd5)
 
-
 ## Getting started
 
 The fastest way to try out Wandersage, is by cloning the repo and just run it. This downloads the dependencies Zellij and Gum, and loads the interactive [documentation](./docs/):
@@ -23,9 +22,9 @@ After learning about the features, write your own notebook and load it:
 
 ## Features
 
-### Bootstrapping dependencies
+### Bootstrapping dependencies for Linux and MacOS
 
-Bash is all you need to get started. Zellij and Gum binaries are downloaded to a local folder, no installation or `sudo` needed.
+Zellij and Gum binaries are downloaded to a local folder, no installation or `sudo` needed. Only depends on `bash`, `curl` and `tar`.
 
 ### Multiplexing
 
