@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 - 2024-11-07
+
+- Initally set `$NOTEBOOK` and `$NOTEBOOKS` variables for interactive terminal
+- Fixed 'bad substition' confirmation bug
+- Bootstrapping now works for Linux and MacOS, with downloading for the correct arch
+- Set notebook name when notebook explorer is only shown
+
 ## 0.1.0 - 2024-08-15
 
 Initial release. Booya!
