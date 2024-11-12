@@ -3,6 +3,7 @@
 ## 0.2.1 - 2024-11-12
 
 - Correctly set system or bootstrapped binaries path, `$ZEL` & `$GUM`
+- Handle folders with no notebooks in it
 
 ## 0.2.0 - 2024-11-07
 
