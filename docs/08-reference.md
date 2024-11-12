@@ -6,12 +6,12 @@ Variables are available both, in the notebook renderer and the interactive termi
 
 ### `$GUM`
 
-The full path of the downloaded [Gum](https://github.com/charmbracelet/gum) binary.
+The full path of the [Gum](https://github.com/charmbracelet/gum) binary (either provided by the system, or bootstrapped).
 You can use it via `bash` inline code to do all kinds of things: request user input, format text, render markdown, etc.
 
 ### `$ZEL`
 
-The full path of the downloaded [Zellij](https://zellij.dev) binary.
+The full path of [Zellij](https://zellij.dev) binary (either provided by the system, or bootstrapped).
 You could use it, for example, to send [actions](https://zellij.dev/documentation/cli-actions) to the current Zellij session.
 
 ### `$NOTEBOOK`

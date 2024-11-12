@@ -5,9 +5,19 @@ set -o errexit
 export ROOT_PATH="$(realpath $(dirname $BASH_SOURCE))"
 export BIN_PATH="$ROOT_PATH/bin"
 export SRC_PATH="$ROOT_PATH/src"
-export ZEL="$BIN_PATH/zellij" # $ZELLIJ is taken over by Zellij
-export GUM="$BIN_PATH/gum"
 export NOTEBOOK="$1"
+
+if [ -x "$(command -v "zellij")" ]; then
+	export ZEL="$(which zellij)"
+else
+	export ZEL="$BIN_PATH/zellij" # $ZELLIJ is taken over by Zellij
+fi
+
+if [ -x "$(command -v "gum")" ]; then
+	export GUM="$(which gum)"
+else
+	export GUM="$BIN_PATH/gum"
+fi
 
 for script in $SRC_PATH/*.sh; do
 	source $script
